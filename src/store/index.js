@@ -1,7 +1,5 @@
 import  Vue from 'vue'
 import Vuex from 'vuex'
-import cookie from 'vue-cookie'
-Vue.prototype.$cookie = cookie;
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -21,12 +19,6 @@ const store = new Vuex.Store({
       // params 要播放的歌曲列表
       state.songList = params
     },
-     // 设置cookie
-     setCookie(state){
-      let token = [];//songList token.push(state.songList[state.currentIndex])
-      token = 1111
-      this.$cookie.set('csonglist',token,3);
-    },
     changeCurrendIndex(state,index){
       // 修改当前正在播放那首歌
       state.currentIndex = index 
@@ -40,7 +32,6 @@ const store = new Vuex.Store({
       }else{
         state.currentIndex=0
       }
-     
     },
     //上一曲
     prevCurrendIndex(state){
@@ -66,7 +57,7 @@ const store = new Vuex.Store({
   getters:{
     currentSong(state){
       // 当前正在播放的那首歌
-      return state.songList[state.currentIndex]||null
+      return state.songList[state.currentIndex]
     },
    
   }

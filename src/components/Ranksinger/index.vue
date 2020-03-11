@@ -140,7 +140,7 @@ export default {
         finalData.push(result[index]);
       }
     }
-    // console.log(finalData);
+    console.log(finalData);
     this.list = finalData;
     //滚动处理
     this.$nextTick(()=>{

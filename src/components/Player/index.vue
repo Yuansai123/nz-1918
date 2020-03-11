@@ -30,6 +30,7 @@
      <span class="iconfont play1" @click='togglePlay'>&#xe606;
 </span>
      <span class="iconfont next" @click='next'>&#xe7f4;</span>
+     <span class="iconfont love" @click="love(currentSong,'lovecookie')">&#xe613;</span>
      <!-- 播放器 -->
      <audio ref='audio' 
             @ended="ended"
@@ -56,9 +57,7 @@
 import MyProgress from 'components/Progress'
 import Lyric from 'components/Lyric'
 import {mapState, mapMutations, mapGetters} from 'vuex'
-import cookie from 'vue-cookie'
-import Vue from 'vue'
-Vue.prototype.$cookie = cookie;
+
 export default {
   components:{MyProgress,Lyric},
   data(){
@@ -78,7 +77,7 @@ export default {
     }
   },
   methods:{
-    ...mapMutations(['changeScreen','nextCurrendIndex','prevCurrendIndex','changeCurrendIndex','changeLoop','setCookie']),
+    ...mapMutations(['changeScreen','nextCurrendIndex','prevCurrendIndex','changeCurrendIndex','changeLoop']),
     togglePlay(){
       this.play=!this.play
     },
@@ -90,6 +89,10 @@ export default {
     canplay(){
       // 歌曲可以播放 
       this.audio = this.$refs.audio 
+      //调用获取数据
+      this.setcookie(this.currentSong,'songcookie')
+      // this.love(this.currentSong,'lovecookie')
+
       console.log('可以播放了')
       this.audio.play()
       this.play = true
@@ -128,6 +131,7 @@ export default {
         default:
           break;
       }
+      
     },
     next(){
       //下一曲 
@@ -137,31 +141,70 @@ export default {
       // 上一曲 
       this.prevCurrendIndex()
     },
-    cc(){
-      console.log(this)
-      this.setCookie()
+    love(cc,lovecookie){
+      //收藏喜欢的歌曲
+      this.setcookie(cc,lovecookie)
+    },
+    //设置cookie
+    setcookie(cc,songcookie){
+        // 设置cookie
+       
+        let token=[{
+          albummid:cc.albummid,albumname:cc.albumname,
+           songmid:cc.songmid,songname:cc.songname,
+          albumUrl:cc.albumUrl,singers:cc.singers,audioUrl:cc.audioUrl
+        }] ;
+        // console.log(token)
+        let getcookie =JSON.parse( localStorage.getItem(songcookie));
+        var falg = true;
+        //  console.log(getcookie)
+        if(getcookie){
+        getcookie.map((item,index)=>{
+            if(item.songmid ==cc.songmid){
+              getcookie.splice(index,1)
+            }
+        });
+        console.log(1111)
+        if(falg){
+          
+         let dd= getcookie.push({
+           albummid:cc.albummid,albumname:cc.albumname,
+           songmid:cc.songmid,songname:cc.songname,
+          albumUrl:cc.albumUrl,singers:cc.singers,audioUrl:cc.audioUrl
+         });
+          // console.log(dd,11)
+        }
+        localStorage.setItem(songcookie,JSON.stringify(getcookie),3)
+        }else{
+          localStorage.setItem(songcookie,JSON.stringify(token),3)
+        }
     }
+
   },
-  created(){
-      // 设置cookie
-      // console.log(this.songList)
-      let token = null;//songList
-      token=this.songList
-      this.$cookie.set('cc',token,1);
-      this.cc()
+  async created(){
+    // this.setcookie()
   },
+  mounted(){
+    // this.setcookie()
+  },
+  updated(){
+  },
+
   watch:{
     play(newValue,oldValue){
+      // 监听当前歌曲
+      this.setcookie(this.currentSong,'songcookie')
+      // this.love(this.currentSong,'lovecookie')
       console.log('播放状态',newValue)
       if(!this.audio) return false 
-      //点击按钮 还是循环
-   
+      //点击按钮 还是循环console.log(this.currentSong )
+      
       if(newValue){
         this.audio.play()
       }else{
         this.audio.pause()
       }
-    },
+    }
   } 
 }
 /*
@@ -313,5 +356,11 @@ export default {
 .iconfont{
   font-size: 26px;
   color: yellow;
+}
+.love{
+  display: inline-block;
+  font-size: 40px;
+  color: green;
+  margin: 0 10px;
 }
 </style>

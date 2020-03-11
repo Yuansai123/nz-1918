@@ -76,7 +76,7 @@ export default {
   },
   created() {
     // 初始化数据 把移动距离挂载到this对象下
-    console.log(111)
+    // console.log(111)
    this.gett()
   },
   mounted(){

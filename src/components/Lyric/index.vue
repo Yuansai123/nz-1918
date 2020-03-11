@@ -28,7 +28,7 @@ export default {
          this.lyricObj.stop()
        }
         this.lyricObj = new Lyric(lyricString,({txt})=>{
-             console.log(txt)
+            //  console.log(txt)
              this.txt=txt
              
         })
