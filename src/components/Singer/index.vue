@@ -104,7 +104,7 @@ export default {
       let startCount=parseInt((y-140)/18)
       this.touch.y=y
       this.touch.startCount=startCount
-      console.log('按下',y ,startCount)
+      // console.log('按下',y ,startCount)
     },
     touchMove(e){
       let moveY =e.touches[0].pageY
@@ -118,7 +118,7 @@ export default {
       this.quickJump(moveFindex)
     },
     touchEnd(){
-      console.log('抬起')
+      // console.log('抬起')
     },
     quickJump(item){
       // 点击每一项之后 触发事件需要知道点到谁了
@@ -141,7 +141,7 @@ export default {
     // 监听滚动
     this.Bs.on('scroll',(pos)=>{
       let y =Math.abs(pos.y)
-      console.log('滚了',y)
+      // console.log('滚了',y)
       // 判断每一次滚动的距离在什么范围内
       let scrollIndex = 0 //滚动所在区域的下标
       for (let index = 0; index < distance.length; index++) {
@@ -168,19 +168,19 @@ export default {
       let result = this.singers.map((item)=>{
         return item.Findex
       })
-      console.log('快速启动数据',result)
+      // console.log('快速启动数据',result)
       return result
     }
   },
   created() {
     // 初始化数据 把移动距离挂载到this对象下
     this.touch={y:0}
-    console.log(111)
+    // console.log(111)
    getSingersData().then((res)=>{
     //  处理数据
      let data =nomalData(res.data.list)
      this.singers=data
-     console.log(this.singers)
+    //  console.log(this.singers)
       // 请求到数据 并更新页面之后再初始化
       this.$nextTick(()=>{
         this.initBs()

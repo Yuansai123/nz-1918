@@ -114,6 +114,7 @@ export default {
   async created() {
     //获取到  排行榜的id
     let { topid } = this.$route.params;
+    console.log(topid)
     //根据id获取  排行榜数据
     let {topinfo,songlist} = await getSongList(topid);
     //赋值  歌曲  榜名  头像

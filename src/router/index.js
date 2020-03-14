@@ -6,7 +6,7 @@ const Recditail = () =>import ('../components/Recditail')
 const Singer = () =>import  ('../components/Singer/index.vue')
 const Rank = () =>import ('../components/Rank')
 const Ranksinger = () =>import  ('components/Ranksinger')
-const Search = () =>import  ('../components/Search')
+const Search = () =>import  ('components/Search')
 const Detail = () =>import  ('components/Detail')
 const My = () =>import ('components/My')
 
@@ -48,6 +48,7 @@ const router = new VueRouter({
     },
     {
       path:'/search',
+      name:'search',
       component:Search
     },
     {

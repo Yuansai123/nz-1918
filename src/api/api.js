@@ -46,16 +46,21 @@ let getLyricByMid=(songmid)=>{
 //总排行
 let getTopList=(firstname)=>{
   let url ='/xixi/fcj/music/topRank'
-  console.log(axios.get(url,{firstname}))
   return axios.get(url,{firstname})
 }
 //歌曲排行
 let getSongList=(topid)=>{
   let url ='/xixi/fcj/music/rankSongList'
-  console.log(axios.post(url,{topid}))
   return axios.post(url,{topid})
 }
-/**********************我的**********************/ 
+/**********************搜索**********************/ 
+// 获取搜素关键词
+let getSearchlist=(kw)=>{
+  console.log('这是接口：',kw)
+  let url = `/xixi//fcj/music/search?kw=${kw}`
+  return axios.get(url)
+}
+
 
 
 export {getBannerData,
@@ -66,5 +71,6 @@ export {getBannerData,
   getLyricByMid,
   getTopList,
   getSongList,
-  getRecSongData
+  getRecSongData,
+  getSearchlist
 }

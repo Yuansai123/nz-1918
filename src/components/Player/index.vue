@@ -3,7 +3,7 @@
     <div v-if='fullScreen' class='big'>
     <!-- 头部 -->
      <div class='top'> 
-       <span @click='changeScreen(false)' class="iconfont">&#xe610;</span>
+       <span @click='changeScreen(false)' class="iconfont back">&#xe610;</span>
        {{currentSong.songname}}
      </div>
      <!-- 背景 -->
@@ -27,10 +27,11 @@
      <!-- 播放 -->
      <span class="xh" @click="changeLoop">{{loops[loop]}} </span>
      <span class="iconfont prev" @click="prev">&#xe7f3;</span>
-     <span class="iconfont play1" @click='togglePlay'>&#xe606;
-</span>
+     <div class="bao" @click="textt">
+       <span class="iconfont play1" @click='togglePlay' ref="togText">&#xe606;</span>
+     </div>
      <span class="iconfont next" @click='next'>&#xe7f4;</span>
-     <span class="iconfont love" @click="love(currentSong,'lovecookie')">&#xe613;</span>
+     <span class="iconfont love" @click="love(currentSong,'lovecookie')" ref="love">&#xe613;</span>
      <!-- 播放器 -->
      <audio ref='audio' 
             @ended="ended"
@@ -49,7 +50,21 @@
         <p class="name1">{{currentSong.songname}}</p>
         <p class='name2'>{{currentSong.singer[0].name}}</p>
       </div>
-      <span class="iconfont" >&#xe606;</span>
+      <div class="bao" @click="text" >
+        <span class="iconfont cc" @click="togglePlay" ref="text">&#xe624;
+</span>
+      </div>
+      <div class="bao">
+        <span class="iconfont dd">&#xe640;</span>
+      </div>
+      
+      <!-- 播放器 -->
+      <audio ref='audio' 
+            @ended="ended"
+            @canplay='canplay'
+            @timeupdate="timeupdate"
+            :src='currentSong.audioUrl'>
+      </audio>
     </div>
   </div>
 </template>
@@ -66,7 +81,8 @@ export default {
       endTime:0,
       loops:['不循环','单曲循环','列表循环','随机循环'],
       play:false,
-      seekTime:0
+      seekTime:0,
+      lovecc:0,
     }
   },
   computed:{
@@ -81,6 +97,25 @@ export default {
     togglePlay(){
       this.play=!this.play
     },
+    textt(){
+      if(!this.play){
+        this.$refs.togText.innerHTML="&#xe624;"
+        
+      }else{
+         this.$refs.togText.innerHTML="&#xe606;"
+      }
+    },
+    text(){
+      console.log(this.$refs.text.innerHTML)
+      if(!this.$refs.text){return false}
+      if(!this.play){
+        this.$refs.text.innerHTML="&#xe624;"
+        
+      }else{
+         this.$refs.text.innerHTML="&#xe606;"
+      }
+     
+    },
     timeupdate(e){
       // console.log('歌曲播放',e)
       // 随着播放更新时间
@@ -90,9 +125,9 @@ export default {
       // 歌曲可以播放 
       this.audio = this.$refs.audio 
       //调用获取数据
-      this.setcookie(this.currentSong,'songcookie')
-      // this.love(this.currentSong,'lovecookie')
-
+      this.setcookie(this.currentSong,'songcookie');
+      this.togglelove(this.currentSong)
+      this.lovecc=0
       console.log('可以播放了')
       this.audio.play()
       this.play = true
@@ -143,7 +178,25 @@ export default {
     },
     love(cc,lovecookie){
       //收藏喜欢的歌曲
+      this.lovecc++
+      if(this.lovecc%2!=0){
+        //收藏起来
       this.setcookie(cc,lovecookie)
+      this.$refs.love.innerHTML='&#xe60a;'
+      }else{//删除本首歌曲
+        this.$refs.love.innerHTML='&#xe613;'
+        let getcookie =JSON.parse( localStorage.getItem(lovecookie));
+        var aa=false
+        let Index=null
+        getcookie.map((item,index)=>{
+          if(item.songname==cc.songname){
+            aa=true
+            Index=index
+          }
+        })
+        getcookie.splice(Index,1)
+        localStorage.setItem(lovecookie,JSON.stringify(getcookie),3)
+      }
     },
     //设置cookie
     setcookie(cc,songcookie){
@@ -152,7 +205,7 @@ export default {
         let token=[{
           albummid:cc.albummid,albumname:cc.albumname,
            songmid:cc.songmid,songname:cc.songname,
-          albumUrl:cc.albumUrl,singers:cc.singers,audioUrl:cc.audioUrl
+          albumUrl:cc.albumUrl,singer:cc.singers,audioUrl:cc.audioUrl,singer:cc.singer
         }] ;
         // console.log(token)
         let getcookie =JSON.parse( localStorage.getItem(songcookie));
@@ -170,7 +223,7 @@ export default {
          let dd= getcookie.push({
            albummid:cc.albummid,albumname:cc.albumname,
            songmid:cc.songmid,songname:cc.songname,
-          albumUrl:cc.albumUrl,singers:cc.singers,audioUrl:cc.audioUrl
+          albumUrl:cc.albumUrl,singers:cc.singers,audioUrl:cc.audioUrl,singer:cc.singer
          });
           // console.log(dd,11)
         }
@@ -178,11 +231,27 @@ export default {
         }else{
           localStorage.setItem(songcookie,JSON.stringify(token),3)
         }
+    },
+    togglelove(lovedd){
+       // 根据歌曲是否被收藏来选择❤️的空心实心
+    let lovett =JSON.parse( localStorage.getItem('lovecookie'));
+    var ff=false
+    if(!lovett){return false}
+    lovett.map((item,index)=>{
+      if(item.songname==lovedd.songname){
+        ff=true
+      }
+    })
+    if(ff){
+      this.$refs.love.innerHTML='&#xe60a;'
+    }else{
+      this.$refs.love.innerHTML='&#xe613;'
+    }
     }
 
   },
   async created(){
-    // this.setcookie()
+    
   },
   mounted(){
     // this.setcookie()
@@ -192,9 +261,12 @@ export default {
 
   watch:{
     play(newValue,oldValue){
-      // 监听当前歌曲
+      //换曲时清除
+      this.lovecc=0
+      //监听歌曲
+      this.togglelove(this.currentSong)
+      // 监听当前歌曲 
       this.setcookie(this.currentSong,'songcookie')
-      // this.love(this.currentSong,'lovecookie')
       console.log('播放状态',newValue)
       if(!this.audio) return false 
       //点击按钮 还是循环console.log(this.currentSong )
@@ -321,6 +393,10 @@ export default {
     .bool{
       background: green;
     }
+    // 播放按钮
+    span{
+      margin: 0 5px;
+    }
   }
   @keyframes rotate {
     0% {
@@ -333,19 +409,19 @@ export default {
 }  
 .prev{
   display: inline-block;
-  font-size: 40px;
+  font-size: 28px;
   color: green;
   margin: 0 10px 0 50px;
 }
 .play1{
   display: inline-block;
-  font-size: 40px;
+  font-size: 28px;
   color: green;
   margin: 0 10px;
 }
 .next{
   display: inline-block;
-  font-size: 40px;
+  font-size: 28px;
   color: green;
   margin: 0 10px;
 } 
@@ -353,14 +429,31 @@ export default {
   font-size: @fs-xl;
   color: pink;
 }
-.iconfont{
-  font-size: 26px;
-  color: yellow;
-}
+
 .love{
   display: inline-block;
-  font-size: 40px;
+  font-size: 28px;
   color: green;
   margin: 0 10px;
+}
+.cc{
+  display: inline-block;
+  font-size: 26px;
+  color: yellow;
+  margin: 0 10px;
+}
+.dd{
+  display: inline-block;
+  font-size: 26px;
+  color: yellow;
+  margin: 0 10px;
+}
+.bao{
+  display: inline-block;
+}
+//头部
+.back{
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 26px;
 }
 </style>
