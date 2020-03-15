@@ -8,7 +8,7 @@
     <!-- 头像 -->
     <div class="avator" :style="{'background-image':`url(${avator})`}" ref="img">
       <div class="shadow"></div>
-      <div class="tbn" @click="allPlay">
+      <div class="tbn" @click="allPlay" ref="btn">
           <i class="iconfont">&#xe624;</i>
           <span class="text">随机播放全部</span>
         </div>
@@ -72,6 +72,7 @@ export default {
     },
     //滚动设置
     initBs() {
+      let btn = this.$refs.btn;
       let img = this.$refs.img;
       let imgH = img.clientHeight;
       let wrapper = this.$refs.wrapper;
@@ -89,10 +90,12 @@ export default {
           // 到达顶部额时候 图片的层级高
           if (Math.abs(y) > imgH - 40) {
             img.style.zIndex = 1;
+            btn.style.display='none'
             img.style.paddingTop = "0%";
             img.style.height = "40px";
           } else {
             img.style.zIndex = -1;
+            btn.style.display='block'
             img.style.paddingTop = "70%";
             img.style.height = 0;
           }
@@ -141,7 +144,7 @@ export default {
         finalData.push(result[index]);
       }
     }
-    console.log(finalData);
+    // console.log(finalData);
     this.list = finalData;
     //滚动处理
     this.$nextTick(()=>{
@@ -198,6 +201,7 @@ export default {
       width: 100%;
       height: 100%;
     }
+    //播放按钮
     .tbn{
       position: absolute;
       top: 80%;
@@ -208,7 +212,6 @@ export default {
       height: 32px;
       border: 1px solid #FFCd32;
       border-radius: 100px;
-        position: absolute;
         i{
           position: absolute;
           left: 10%;
@@ -237,7 +240,6 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
-    //   overflow: hidden;
     .content {
       padding: 10px 30px;
       background: #222;

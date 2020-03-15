@@ -7,10 +7,12 @@
      </div>
      <!-- 头像 -->
      <div class='avator' 
-     :style="{'background-image':`url(${avator})`}" 
-     ref='img'
-     >
+     :style="{'background-image':`url(${avator})`}" ref='img'>
        <div class='shadow'></div>
+       <div class="tbn" @click="allPlay" ref="btn">
+          <i class="iconfont">&#xe624;</i>
+          <span class="text">随机播放全部</span>
+        </div>
      </div>
      <!-- 歌曲列表 -->
      <div class='songlist' ref='wrapper'>
@@ -53,7 +55,17 @@ export default {
       // 点击屏幕变大
       this.changeScreen(true)
     },
+    //随机播放
+    allPlay(list){
+      for(let index=0;index<this.list.length;index++){
+        this.changeCurrendIndex(index);
+      }
+      this.addSongList(this.list);
+      this.changeScreen(true);
+      this.upLoop(3);
+    },
     initBs(){
+      let btn = this.$refs.btn
       let img = this.$refs.img
       let imgH= img.clientHeight 
       let wrapper = this.$refs.wrapper
@@ -71,10 +83,12 @@ export default {
           // 到达顶部额时候 图片的层级高
           if(Math.abs(y)>imgH-40){
             img.style.zIndex=1
+            btn.style.display='none'
             img.style.paddingTop='0%'
             img.style.height='40px'
           }else{ 
              img.style.zIndex=-1
+             btn.style.display='block'
              img.style.paddingTop='70%'
              img.style.height=0
           }
@@ -94,8 +108,8 @@ export default {
     }
   },
   async created(){
-    console.log('detail创建')
-    console.log(this.$route) 
+    // console.log('detail创建')
+    // console.log(this.$route) 
     let {singermid} =this.$route.params
     // 根据歌手mid 发起请求获取数据
     
@@ -111,7 +125,7 @@ export default {
        finalData.push(result[index])
      }
     }
-    console.log(finalData)
+    // console.log(finalData)
     this.list = finalData
     this.name = data.data.singer_name
     this.avator =`https://y.gtimg.cn/music/photo_new/T001R300x300M000${singermid}.jpg?max_age=2592000`
@@ -124,9 +138,9 @@ export default {
    next()
   },
   async beforeRouteUpdate(to,from,next){
-    console.log('组件复用更新的时候执行',from,to)
+    // console.log('组件复用更新的时候执行',from,to)
     let {singermid} = to.params
-    console.log(singermid)
+    // console.log(singermid)
     next()
   }
 }
@@ -184,6 +198,35 @@ export default {
       width: 100%;
       height: 100%;
     }
+    .tbn{
+      position: absolute;
+      top: 80%;
+      left:120px ;
+      box-sizing: border-box;
+      padding: 7px 0;
+      width:135px ;
+      height: 32px;
+      border: 1px solid #FFCd32;
+      border-radius: 100px;
+        position: absolute;
+        i{
+          position: absolute;
+          left: 10%;
+          display: inline-block;
+          margin-right: 6px;
+          vertical-align: middle;
+          font-size: 16px;
+          color: #FFCd32;
+        }
+        span{
+          position: absolute;
+          left: 30%;
+          display: inline-block;
+          vertical-align: middle;
+          font-size: @fs-xs;
+          color: #FFCd32;
+      }
+    }
   }
   // 歌曲列表
   .songlist{
@@ -203,10 +246,12 @@ export default {
        height: 61px;
        h2{
         height: 20px;
+        font-size: @fs-s;
        }
        p{
         margin-top:3px; 
         height:20px ;
+        color: rgba(255, 255, 255, 0.3);
        }
      }
    }

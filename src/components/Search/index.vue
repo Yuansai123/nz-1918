@@ -11,12 +11,12 @@
        <div class="box">
          <div class="center">
            <!-- list覆盖 -->
-           <div class="sparwa" v-if="show">
+           <div class="wrapper" v-if="show" ref="wrapper">
              <div class="lists">
                <ul>
                  <li class="songlist" v-for="(el,index) in songlist" 
                  :key="index" @click="songplay(index)">
-                    <p>{{el.name}}-{{el.singer}}</p>
+                    <p>{{el.songname}}-{{el.singer[0].name}}</p>
                  </li>
                </ul>
              </div>
@@ -34,7 +34,7 @@
   </div>
 </template>
 <script>
-import {getSearchlist,getSongUrlByMid} from "api/api.js";
+import {getSearchlist,getSongUrlByMid,getRecSongData} from "api/api.js";
 import BS from  'better-scroll';
 import { mapMutations } from "vuex";
 export default {
@@ -43,10 +43,11 @@ export default {
       list:['我们的家','冰雪奇缘2','张杰','桥边姑娘','星辰大海','哪吒 李宇春','左手指月','邓紫棋','酒醉的蝴蝶','左肩'],//关键词
       songlist:[],//歌曲仓库
       kws:'',
-      show:false
+      show:false,
     }
   },
   methods:{
+    ...mapMutations(['addSongList','changeCurrendIndex','changeScreen']),
     //热搜
     search(event){
      let ccValue= event.currentTarget.value
@@ -57,32 +58,67 @@ export default {
      }
     },
     btnsearch(item){
-      console.log('字段变了',this.kws)
+      // console.log('字段变了',this.kws)
       this.kws = item
       if(this.kws != ''){
         this.show = true
         this.getSearch(this.kws)
       }
+      return this.kws
     },
+    //点击清空字段
     del(){
       this.kws = null
       this.show = false
     },
-    //手动搜素
-    songplay(){},
+    //点击跳转播放
+    songplay(index){
+      // 点击歌的li 显示播放器
+      this.addSongList(this.songlist)
+      // 确定点击的是那首歌
+      this.changeCurrendIndex(index)
+      // 点击屏幕变大
+      this.changeScreen(true)
+    },
     //滚动
-    initBs(){},
+    // initBs(){
+    //   let wrapper = this.$refs.wrapper
+    //   this.bs = new BS(wrapper,{probeType:3,click:true})
+    // },
     //关键字数据
-    getSearch(kw){
+   async getSearch(kw){
+      let mids=[]
        getSearchlist(kw).then((res)=>{
-        this.songlist = res.data.song.itemlist
-        console.log(this.songlist)
-      })  
-      }
+        let cclist=res.data.song.list
+        let result=cclist.map((item,index)=>{
+        let {albummid,albumname,singer,songmid,songname,audioUrl}=item
+        mids.push(songmid)
+        let albumUrl=`https://y.gtimg.cn/music/photo_new/T002R300x300M000${albummid}.jpg?max_age=2592000`
+        return {albummid,albumname,singer,songmid,songname,albumUrl,audioUrl}
+      })
+      //获取歌曲播放地址
+      let finalData=[]
+      
+      let cc= getSongUrlByMid(mids).then((ret)=>{
+        let urls = ret.urls
+        // console.log(urls)
+      for(let index=0;index<result.length;index++){
+          result[index].audioUrl=urls[index]
+          if(urls[index]){
+          // 将不能播放的歌曲去除
+          finalData.push(result[index])
+          }
+        }
+        // console.log(finalData)
+        this.songlist = finalData
+        return finalData
+        })
+       })  
+      },
   },
-async created(){
-  this.getSearch()
- 
+created(){
+  //滚动处理、
+  // this.initBs()
   },
 updated(){
 }
@@ -171,12 +207,13 @@ updated(){
   }
 }
 //歌曲列表
- .sparwa{
+ .wrapper{
    .w(375);
    position: fixed;
    left: 0;
    height: 100vh;
    background:#222;
+   overflow: hidden;
    .lists{
      width: 90%;
      margin: auto;
@@ -194,13 +231,17 @@ updated(){
    }
  }
 </style>
+http://ustbhuangyi.com/music/api/lyric?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&songmid=000JKutf0nVaSU&platform=yqq&hostUin=0&needNewCode=0&categoryId=10000000&pcachetime=1584169709477
 
-https://y.gtimg.cn/music/photo_new/T001R300x300M000000JKutf0nVaSU.jpg?max_age=2592000
-http://imgcache.qq.com/music/photo/mid_album_58/j/0/001ys2aS1sU6j0.jpg
-https://y.gtimg.cn/music/photo_new/T002R300x300M000000657sU1wUTIM.jpg?max_age=2592000
-http://ustbhuangyi.com/music/api/lyric?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&songmid=003HHPxJ4638xA&platform=yqq&hostUin=0&needNewCode=0&categoryId=10000000&pcachetime=1584146190779
-https://y.gtimg.cn/music/photo_new/T002R300x300M000000TIBdC0xuRPc.jpg?max_age=2592000
-000TIBdC0xuRPc
-http://ustbhuangyi.com/music/api/search?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&w=%E5%BC%A0%E6%9D%B0&p=1&perpage=20&n=20&catZhida=1&zhidaqu=1&t=0&flag=1&ie=utf-8&sem=1&aggr=0&remoteplace=txt.mqq.all&uin=0&needNewCode=1&platform=h5
-http://ustbhuangyi.com/music/api/search?g_tk=1928093487&w=zhangjie
+https://y.gtimg.cn/music/photo_new/T002R300x300M000001ZaCQY2OxVMg.jpg?max_age=2592000
 000JKutf0nVaSU
+http://ustbhuangyi.com/music/api/getCdInfo?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=jsonp&disstid=102051467&type=1&json=1&utf8=1&onlysong=0&platform=yqq&hostUin=0&needNewCode=0
+
+http://ustbhuangyi.com/music/api/search?w=cc
+http://ustbhuangyi.com/music/api/search?format=json&w=cc
+0: "http://aqqmusic.tc.qq.com/amobile.music.tc.qq.com/C4000038uc1C1XF1lY.m4a?guid=909025638&vkey=9D480AA058CA3E35F18A58F408C23A3767BD4D0288AABB1C2535D6260FE3B42AC7530DC66C76BAB9EE6E4C7B5A35BE3CADFA0C752EC98D90&uin=0&fromtag=66"
+
+
+
+
+

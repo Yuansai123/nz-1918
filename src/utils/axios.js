@@ -12,7 +12,7 @@ axios.interceptors.request.use(function (config) {
 
 //响应拦截器  接受到数据的时候对数据进行处理
 axios.interceptors.response.use(function (response) {
-  console.log('响应拦截器')
+  // console.log('响应拦截器')
   // console.log(response)
   return response.data;
 }, function (error) {

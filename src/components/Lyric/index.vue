@@ -64,9 +64,14 @@ export default {
 <style lang="less" scoped>
 @import '~style/index.less';
 .lyric{
+  .w(375);
+  height: 50px;
   font-size: @fs-l;
   font-weight: bolder;
   color: purple;
+  overflow: hidden;
+  text-align: center;
+  line-height: 50px;
 }
 
 </style>

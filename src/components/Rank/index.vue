@@ -80,7 +80,7 @@ export default {
    this.gett()
   },
   mounted(){
-    console.log('排行挂载')
+    // console.log('排行挂载')
     getTopList().then((res)=>{
        this.rankAll = res.data.topList
      }),

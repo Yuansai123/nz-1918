@@ -47,7 +47,7 @@ export default {
   },
   methods:{
     recomDitail(dissid){
-      console.log(dissid)
+      // console.log(dissid)
       this.$router.push(`/recommend/${dissid}`)
     },
     initBs(){
@@ -61,7 +61,7 @@ export default {
     ))
     getRecommendData().then((res)=>{
       this.recommendList = res.data.list
-      console.log(this.recommendList)
+      // console.log(this.recommendList)
     })
     this.initBs() 
   }

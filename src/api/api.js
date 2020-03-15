@@ -56,8 +56,8 @@ let getSongList=(topid)=>{
 /**********************搜索**********************/ 
 // 获取搜素关键词
 let getSearchlist=(kw)=>{
-  console.log('这是接口：',kw)
-  let url = `/xixi//fcj/music/search?kw=${kw}`
+  // console.log('这是接口：',kw)
+  let url = `/hehe/music/api/search?format=json&w=${kw}`
   return axios.get(url)
 }
 

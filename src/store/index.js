@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     },
     nextCurrendIndex(state){
       let count = state.songList.length
-      console.log(count)
+      // console.log(count)
       if(state.currentIndex<count-1){
          state.currentIndex++
       }else{

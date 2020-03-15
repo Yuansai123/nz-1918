@@ -57,7 +57,7 @@ export default {
     },
     //随机播放
     allPlay() {
-      console.log(111)
+      // console.log(111)
       for (let index = 0; index < this.list.length; index++) {
         this.changeCurrendIndex(index);
       }
@@ -68,7 +68,7 @@ export default {
     },
     //歌曲点击播放
      openPlay(index){
-       console.log(this.list)
+      //  console.log(this.list)
       // 点击歌的li 显示播放器
       this.addSongList(this.list)
       // 确定点击的是那首歌
@@ -94,7 +94,7 @@ export default {
       //调用最近听的的cookie
       let getcookies = JSON.parse(localStorage.getItem("songcookie"));
       this.list =getcookies;
-      console.log(this.list);
+      // console.log(this.list);
     },
     lovecookie(){
       //获取我喜欢的 cookie

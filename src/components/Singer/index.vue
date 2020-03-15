@@ -155,7 +155,7 @@ export default {
         
       // 根据下标换字母
       let scrollFindex=this.quickData[scrollIndex]
-      console.log(scrollFindex)
+      // console.log(scrollFindex)
       this.selFindex=scrollFindex
     })
     

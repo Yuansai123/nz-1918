@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2743895",
+      "name": "暂停循环",
+      "font_class": "zantingxunhuan",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "12036448",
+      "name": "随机03",
+      "font_class": "suiji",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "12036464",
+      "name": "循环06",
+      "font_class": "xunhuan",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "12036466",
+      "name": "循环02",
+      "font_class": "xunhuan1",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
       "icon_id": "1350116",
       "name": "返回",
       "font_class": "back",

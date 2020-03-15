@@ -8,7 +8,7 @@
     <!-- 头像 -->
     <div class="avator" :style="{'background-image':`url(${avator})`}" ref="img">
       <div class="shadow"></div>
-      <div class="tbn" @click="allPlay">
+      <div class="tbn" @click="allPlay" ref="btn">
           <i class="iconfont">&#xe624;</i>
           <span class="text">随机播放全部</span>
         </div>
@@ -72,6 +72,7 @@ export default {
     },
     //滚动设置
     initBs() {
+      let btn = this.$refs.btn;
       let img = this.$refs.img;
       let imgH = img.clientHeight;
       let wrapper = this.$refs.wrapper;
@@ -89,10 +90,12 @@ export default {
           // 到达顶部额时候 图片的层级高
           if (Math.abs(y) > imgH - 40) {
             img.style.zIndex = 1;
+            btn.style.display='none'
             img.style.paddingTop = "0%";
             img.style.height = "40px";
           } else {
             img.style.zIndex = -1;
+            btn.style.display='block'
             img.style.paddingTop = "70%";
             img.style.height = 0;
           }
@@ -114,7 +117,7 @@ export default {
   async created() {
     //获取到  排行榜的id
     let { topid } = this.$route.params;
-    console.log(topid)
+    // console.log(topid)
     //根据id获取  排行榜数据
     let {topinfo,songlist} = await getSongList(topid);
     //赋值  歌曲  榜名  头像
@@ -141,7 +144,7 @@ export default {
         finalData.push(result[index]);
       }
     }
-    console.log(finalData);
+    // console.log(finalData);
     this.list = finalData;
     //滚动处理
     this.$nextTick(()=>{
