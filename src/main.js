@@ -17,8 +17,8 @@ Vue.config.productionTip = false
 // 图片懒加载
 Vue.use(VueLazyload, {
   preLoad: 1.3,
-  error: '/favicon.ico',
-  loading: '/favicon.ico',
+  error: '/0.jpg',
+  loading: '/0.jpg',
   attempt: 1
 })
 new Vue({

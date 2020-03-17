@@ -20,8 +20,8 @@
       <Lyric :seekTime="seekTime" :play="play"></Lyric>
       <!-- 进度条 -->
       <MyProgress :startTime="startTime" :endTime="endTime" @seekFa="seek"></MyProgress>
-      <!-- 播放 -->
-      <span class="iconfont xh" @click="btndd(loop)" ref="xh">&#xe647;</span>
+      <!-- 播放 &#xe647;-->
+      <span ref="xh"   class="iconfont xh" @click="changeLoop">{{loops[loop]}}</span>
       <span class="iconfont prev" @click="prev">&#xe7f3;</span>
       <div class="bao">
         <span class="iconfont play1" @click="togglePlay" ref="texttog">&#xe606;</span>
@@ -80,11 +80,10 @@ export default {
     return {
       startTime: 0,
       endTime: 0,
-      loops: ['&#xe647;', "&#xe60f;", "&#xe611;", "&#xe60e;"],
+      loops: [`\ue647`, "\ue60f", "\ue611", "\ue60e"],
       play: false,
       seekTime: 0,
       lovecc: 0,
-      loo:0
     };
   },
   computed: {
@@ -102,29 +101,6 @@ export default {
       "changeCurrendIndex",
       "changeLoop"
     ]),
-    //切换循环状态
-    btndd(loop){
-      this.changeLoop(this.loop)
-      // console.log(loop)
-      switch (loop) {
-        case 1:
-          //  单曲循环
-          this.$refs.xh.innerHTML='&#xe60f;'
-          break;
-        case 2:
-          // 列表相当于下一曲
-          this.$refs.xh.innerHTML='&#xe611;'
-          break;
-        case 3:
-          //随机播放
-         this.$refs.xh.innerHTML='&#xe60e;'
-         break;
-        default:
-          this.$refs.xh.innerHTML='&#xe647;'
-          break;
-      }
-      
-    },
     togglePlay() {
       this.play = !this.play;
     },
@@ -146,7 +122,7 @@ export default {
       this.endTime = this.audio.duration;
     },
     seek(s) {
-      console.log("父组件的方法");
+      // console.log("父组件的方法");
       if (!this.audio) {
         return false;
       }
@@ -172,7 +148,7 @@ export default {
           //随机播放
           let count = this.songList.length;
           let index = parseInt(Math.random() * count);
-          console.log("随机", index);
+          // console.log("随机", index);
           this.changeCurrendIndex(index);
         default:
           break;
@@ -273,18 +249,11 @@ export default {
       }
     }
   },
-  async created() {},
-  mounted() {
-    // this.setcookie()
-  },
-  updated() {},
-
   watch: {
     play(newValue, oldValue) {
       //换曲时清除
       this.lovecc = 0;
       //监听歌曲
-      // this.togglelove(this.currentSong);
       // 监听当前歌曲
       this.setcookie(this.currentSong, "songcookie");
       // console.log("播放状态", newValue);
@@ -422,10 +391,20 @@ export default {
         .name1 {
           font-size: @fs-s;
           color: #fff;
+          width: 100%;
+          height: 20px;
+          overflow: hidden;
+          text-align: center;
+          line-height: 20px;
         }
         .name2 {
           font-size: @fs-xs;
           color: rgba(255, 255, 255, 0.3);
+          width: 100%;
+          height: 20px;
+          overflow: hidden;
+          text-align: center;
+          line-height: 20px;
         }
       }
     }

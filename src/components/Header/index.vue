@@ -1,8 +1,8 @@
 <template>
   <div class='header'>
     <!-- 如果图片在public目录直接用根路径 -->
-    <img src="/favicon.ico" alt="">
-    <span>NZMUSIC</span>
+    <img src="../../../public/0.jpg" alt="">
+    <span>MUSIC</span>
     <!-- <router-link to='/my' tag='div' active-class="sel">  -->
       <span class="iconfont" @click='tomy'>&#xe607;</span>
     <!-- </router-link> -->

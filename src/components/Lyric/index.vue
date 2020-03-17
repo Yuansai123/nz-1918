@@ -45,7 +45,7 @@ export default {
     },
     play(newPlay,oldPlay){
       if(!this.lyricObj) {return false}
-      console.log('歌词播放状态',newPlay)
+      // console.log('歌词播放状态',newPlay)
       this.lyricObj.togglePlay()
       
     },

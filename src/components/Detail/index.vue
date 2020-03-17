@@ -43,7 +43,7 @@ export default {
     }
   },
   methods:{
-    ...mapMutations(['addSongList','changeCurrendIndex','changeScreen']),
+    ...mapMutations(['addSongList','changeCurrendIndex','changeScreen','upLoop']),
     back(){
       this.$router.go(-1)
     },
